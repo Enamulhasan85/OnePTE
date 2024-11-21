@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from random import randint
 
 
 class Question(models.Model):
@@ -56,11 +58,11 @@ class ReadingMultipleChoiceQuestion(models.Model):
 
 
 class RMMCQOption(models.Model):  
-    rmmcq_question = models.ForeignKey(
-        ReadingMultipleChoiceQuestion, on_delete=models.CASCADE, related_name='options'
-    )
+    rmmcq_question = models.ForeignKey(ReadingMultipleChoiceQuestion, on_delete=models.CASCADE, related_name='options')
     content = models.TextField(help_text="Option text")
     is_correct = models.BooleanField(default=False, help_text="Indicates if this option is correct")
 
     def __str__(self):
         return f"Option: {self.content[:50]} (Correct: {self.is_correct})"
+
+
