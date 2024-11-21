@@ -66,3 +66,121 @@ class RMMCQOption(models.Model):
         return f"Option: {self.content[:50]} (Correct: {self.is_correct})"
 
 
+
+class SSTAnswer(models.Model):
+    """
+    Model for storing answers to Summarize Spoken Text (SST) questions.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sst_answers")
+    question = models.ForeignKey("SummarizeSpokenText", on_delete=models.CASCADE, related_name="answers")
+    text = models.TextField(help_text="Student's text-based summary.")
+    content_score = models.IntegerField(default=0, help_text="Score for content (max 2).")
+    form_score = models.IntegerField(default=0, help_text="Score for form (max 2).")
+    grammar_score = models.IntegerField(default=0, help_text="Score for grammar (max 2).")
+    vocabulary_score = models.IntegerField(default=0, help_text="Score for vocabulary (max 2).")
+    spelling_score = models.IntegerField(default=0, help_text="Score for spelling (max 2).")
+    total_score = models.IntegerField(default=0, help_text="Total score out of 10.")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def calculate_score(self):
+        """
+        Fake scoring logic for SST. Generate random scores for components.
+        """
+        self.content_score = randint(0, 2)
+        self.form_score = randint(0, 2)
+        self.grammar_score = randint(0, 2)
+        self.vocabulary_score = randint(0, 2)
+        self.spelling_score = randint(0, 2)
+        self.total_score = (
+            self.content_score + self.form_score +
+            self.grammar_score + self.vocabulary_score +
+            self.spelling_score
+        )
+        self.save()
+
+    def get_score_components(self):
+        return {
+            "Content": {"score": self.content_score, "max_score": 2},
+            "Form": {"score": self.form_score, "max_score": 2},
+            "Grammar": {"score": self.grammar_score, "max_score": 2},
+            "Vocabulary": {"score": self.vocabulary_score, "max_score": 2},
+            "Spelling": {"score": self.spelling_score, "max_score": 2},
+            "Total": {"score": self.total_score, "max_score": 10},
+        }
+
+    def __str__(self):
+        return f"Answer by {self.user} for SST {self.question.title}"
+
+
+class ROAnswer(models.Model):
+    """
+    Model for storing answers to Re-Order Paragraph (RO) questions.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ro_answers")
+    question = models.ForeignKey("ReorderParagraphQuestion", on_delete=models.CASCADE, related_name="answers")
+    paragraph_order = models.JSONField(help_text="Submitted order of paragraphs.")
+    total_score = models.IntegerField(default=0, help_text="Total score based on correct adjacent pairs.")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def calculate_score(self):
+        """
+        Scoring logic for RO. Score based on the number of correct adjacent pairs.
+        """
+        next_correct_order = list(
+            self.question.paragraphs.order_by("id").values_list("correct_next_order", flat=True)
+        )
+        submitted_order = self.paragraph_order
+        correct_pairs = 0
+
+        # Count the number of correct adjacent pairs
+        for i in range(len(submitted_order) - 1):
+            if (next_correct_order[submitted_order[i] - 1] == submitted_order[i + 1]):
+                correct_pairs += 1
+
+        self.total_score = correct_pairs
+        self.save()
+
+    def get_score_components(self):
+        return {
+            "Blank": {"score": self.total_score, "max_score": len(self.paragraph_order) - 1}
+        }
+
+    def __str__(self):
+        return f"Answer by {self.user} for RO {self.question.title}"
+
+
+class RMMCQAnswer(models.Model):
+    """
+    Model for storing answers to Reading Multiple Choice (RMMCQ) questions.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rmmcq_answers")
+    question = models.ForeignKey("ReadingMultipleChoiceQuestion", on_delete=models.CASCADE, related_name="answers")
+    selected_options = models.ManyToManyField("RMMCQOption", related_name="answers", help_text="Selected options by the user.")
+    total_score = models.IntegerField(default=0, help_text="Total score for the question.")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def calculate_score(self):
+        """
+        Scoring logic for RMMCQ. Add 1 for each correct option and subtract 1 for incorrect ones.
+        """
+        correct_options = self.question.options.filter(is_correct=True).values_list("id", flat=True)
+        selected_options = self.selected_options.values_list("id", flat=True)
+        
+        score = 0
+        for option in selected_options:
+            if option in correct_options:
+                score += 1
+            else:
+                score -= 1
+
+        self.total_score = max(0, score)  # Ensure minimum score is 0
+        self.save()
+
+    def get_score_components(self):
+        correct_count = self.question.options.filter(is_correct=True).count()
+        return {
+            "Choice": {"score": self.total_score, "max_score": correct_count},
+        }
+
+    def __str__(self):
+        return f"Answer by {self.user} for RMMCQ {self.question.title}"
