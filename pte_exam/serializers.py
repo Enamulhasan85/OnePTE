@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from .models import Question, SummarizeSpokenText, SSTAudioFile, ReorderParagraph, ReorderParagraphQuestion, ReadingMultipleChoiceQuestion, RMMCQOption
 from .models import SSTAnswer, ROAnswer, RMMCQAnswer
@@ -151,7 +152,8 @@ class SubmitAnswerSerializer(serializers.Serializer):
             answer = SSTAnswer.objects.create(
                 user=self.context['request'].user,
                 question=sst_question,
-                text=answer_data
+                text=answer_data,
+                created_at = timezone.now()
             )
             answer.calculate_score()
             return answer
@@ -161,7 +163,8 @@ class SubmitAnswerSerializer(serializers.Serializer):
             answer = ROAnswer.objects.create(
                 user=self.context['request'].user,
                 question=ro_question,
-                paragraph_order=answer_data
+                paragraph_order=answer_data,
+                created_at = timezone.now()
             )
             answer.calculate_score()
             return answer
@@ -171,7 +174,8 @@ class SubmitAnswerSerializer(serializers.Serializer):
             selected_options = RMMCQOption.objects.filter(id__in=answer_data)
             answer = RMMCQAnswer.objects.create(
                 user=self.context['request'].user,
-                question=rmmcq_question
+                question=rmmcq_question,
+                created_at = timezone.now()
             )
             answer.selected_options.set(selected_options)
             answer.calculate_score()

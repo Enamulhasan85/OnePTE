@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from random import randint
+from django.utils import timezone
 
 
 class Question(models.Model):
@@ -80,7 +81,7 @@ class SSTAnswer(models.Model):
     vocabulary_score = models.IntegerField(default=0, help_text="Score for vocabulary (max 2).")
     spelling_score = models.IntegerField(default=0, help_text="Score for spelling (max 2).")
     total_score = models.IntegerField(default=0, help_text="Total score out of 10.")
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def calculate_score(self):
         """
@@ -120,7 +121,7 @@ class ROAnswer(models.Model):
     question = models.ForeignKey("ReorderParagraphQuestion", on_delete=models.CASCADE, related_name="answers")
     paragraph_order = models.JSONField(help_text="Submitted order of paragraphs.")
     total_score = models.IntegerField(default=0, help_text="Total score based on correct adjacent pairs.")
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def calculate_score(self):
         """
@@ -157,7 +158,7 @@ class RMMCQAnswer(models.Model):
     question = models.ForeignKey("ReadingMultipleChoiceQuestion", on_delete=models.CASCADE, related_name="answers")
     selected_options = models.ManyToManyField("RMMCQOption", related_name="answers", help_text="Selected options by the user.")
     total_score = models.IntegerField(default=0, help_text="Total score for the question.")
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def calculate_score(self):
         """

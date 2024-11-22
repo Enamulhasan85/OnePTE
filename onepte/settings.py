@@ -131,11 +131,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = True  # Enable timezone-aware datetime
 
 
 # Static files (CSS, JavaScript, Images)
@@ -147,3 +147,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import os
+
+# Path where uploaded media files will be stored
+MEDIA_URL = '/media/'
+
+# Absolute filesystem path to the directory where media files are stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
