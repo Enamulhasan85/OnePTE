@@ -55,6 +55,16 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=12),  # Token lasts 12 hours
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Refresh token lasts 7 days
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

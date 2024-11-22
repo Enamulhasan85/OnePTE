@@ -109,7 +109,7 @@ class SSTAnswer(models.Model):
         }
 
     def __str__(self):
-        return f"Answer by {self.user} for SST {self.question.title}"
+        return f"Answer by {self.user} for SST {self.question.question.title}"
 
 
 class ROAnswer(models.Model):
@@ -146,7 +146,7 @@ class ROAnswer(models.Model):
         }
 
     def __str__(self):
-        return f"Answer by {self.user} for RO {self.question.title}"
+        return f"Answer by {self.user} for RO {self.question.question.title}"
 
 
 class RMMCQAnswer(models.Model):
@@ -183,4 +183,4 @@ class RMMCQAnswer(models.Model):
         }
 
     def __str__(self):
-        return f"Answer by {self.user} for RMMCQ {self.question.title}"
+        return f"Answer by {self.user} for RMMCQ {self.question.question.title}"

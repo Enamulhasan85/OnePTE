@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, SummarizeSpokenText, SSTAudioFile, ReorderParagraphQuestion, ReorderParagraph, ReadingMultipleChoiceQuestion, RMMCQOption
+from .models import *
 
 # admin.site.register(Question)
 # admin.site.register(SummarizeSpokenText)
@@ -50,4 +50,24 @@ class ReadingMultipleChoiceQuestionAdmin(admin.ModelAdmin):
     inlines = [RMMCQOptionInline]
 
 
+@admin.register(SSTAnswer)
+class SSTAnswerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'question', 'total_score', 'created_at')
+    search_fields = ('user__username', 'question__question__title')
+    readonly_fields = ('content_score', 'form_score', 'grammar_score', 'vocabulary_score', 'spelling_score', 'total_score')
+    list_filter = ('created_at',)
 
+@admin.register(ROAnswer)
+class ROAnswerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'question', 'total_score', 'created_at')
+    search_fields = ('user__username', 'question__question__title')
+    readonly_fields = ('total_score',)
+    list_filter = ('created_at',)
+
+@admin.register(RMMCQAnswer)
+class RMMCQAnswerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'question', 'total_score', 'created_at')
+    search_fields = ('user__username', 'question__question__title')
+    readonly_fields = ('total_score',)
+    filter_horizontal = ('selected_options',)  # For better UI when selecting options
+    list_filter = ('created_at',)
