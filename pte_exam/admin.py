@@ -50,24 +50,33 @@ class ReadingMultipleChoiceQuestionAdmin(admin.ModelAdmin):
     inlines = [RMMCQOptionInline]
 
 
+@admin.register(Answer)
+class AnswerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'question', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('user__username', 'question__title')
+
+
 @admin.register(SSTAnswer)
 class SSTAnswerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'question', 'total_score', 'created_at')
-    search_fields = ('user__username', 'question__question__title')
+    list_display = ('answer', 'question', 'total_score', 'answer__created_at')
+    search_fields = ('answer__user__username', 'question__question__title')
     readonly_fields = ('content_score', 'form_score', 'grammar_score', 'vocabulary_score', 'spelling_score', 'total_score')
-    list_filter = ('created_at',)
+    list_filter = ('answer__created_at',)
+
 
 @admin.register(ROAnswer)
 class ROAnswerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'question', 'total_score', 'created_at')
-    search_fields = ('user__username', 'question__question__title')
+    list_display = ('answer', 'question', 'total_score', 'answer__created_at')
+    search_fields = ('answer__user__username', 'question__question__title')
     readonly_fields = ('total_score',)
-    list_filter = ('created_at',)
+    list_filter = ('answer__created_at',)
+
 
 @admin.register(RMMCQAnswer)
 class RMMCQAnswerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'question', 'total_score', 'created_at')
-    search_fields = ('user__username', 'question__question__title')
+    list_display = ('answer', 'question', 'total_score', 'answer__created_at')
+    search_fields = ('answer__user__username', 'question__question__title')
     readonly_fields = ('total_score',)
     filter_horizontal = ('selected_options',)  # For better UI when selecting options
-    list_filter = ('created_at',)
+    list_filter = ('answer__created_at',)

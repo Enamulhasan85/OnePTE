@@ -1,12 +1,14 @@
 from django.utils import timezone
 from rest_framework import serializers
-from .models import Question, SummarizeSpokenText, SSTAudioFile, ReorderParagraph, ReorderParagraphQuestion, ReadingMultipleChoiceQuestion, RMMCQOption
+from .models import *
 from .models import SSTAnswer, ROAnswer, RMMCQAnswer
 
 class QuestionSerializer(serializers.ModelSerializer):
+    question_type_display = serializers.CharField(source='get_question_type_display', read_only=True)
+
     class Meta:
         model = Question
-        fields = ['id', 'title', 'question_type']  # Only include the ID, title, and question_type
+        fields = ['id', 'title', 'question_type', 'question_type_display']  # Only include the ID, title, and question_type
 
 
 class SSTAudioFileSerializer(serializers.ModelSerializer):
@@ -33,10 +35,11 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
     paragraphs = serializers.SerializerMethodField()
     passage = serializers.SerializerMethodField()
     options = serializers.SerializerMethodField()
+    question_type_display = serializers.CharField(source='get_question_type_display', read_only=True)
 
     class Meta:
         model = Question
-        fields = ['id', 'title', 'question_type', 'answer_time_limit', 'audios', 'paragraphs', 'passage', 'options']
+        fields = ['id', 'title', 'question_type', 'question_type_display', 'answer_time_limit', 'audios', 'paragraphs', 'passage', 'options']
 
     def get_answer_time_limit(self, obj):
         if obj.question_type == 'SST':
@@ -147,36 +150,41 @@ class SubmitAnswerSerializer(serializers.Serializer):
         question = Question.objects.get(id=question_id)
         question_type = question.question_type
 
-        if question_type == 'SST':
-            sst_question = SummarizeSpokenText.objects.get(question=question)
-            answer = SSTAnswer.objects.create(
+        answer = Answer.objects.create(
                 user=self.context['request'].user,
-                question=sst_question,
-                text=answer_data,
+                question=question,
                 created_at = timezone.now()
             )
-            answer.calculate_score()
-            return answer
+
+        if question_type == 'SST':
+            sst_question = SummarizeSpokenText.objects.get(question=question)
+            sst_answer = SSTAnswer.objects.create(
+                answer=answer,
+                question=sst_question,
+                text=answer_data,
+            )
+            sst_answer.calculate_score()
+            return sst_answer
         
         elif question_type == 'RO':
             ro_question = ReorderParagraphQuestion.objects.get(question=question)
-            answer = ROAnswer.objects.create(
-                user=self.context['request'].user,
+            ro_answer = ROAnswer.objects.create(
+                answer=answer,
                 question=ro_question,
                 paragraph_order=answer_data,
-                created_at = timezone.now()
             )
-            answer.calculate_score()
-            return answer
+            ro_answer.calculate_score()
+            return ro_answer
         
         elif question_type == 'RMMCQ':
             rmmcq_question = ReadingMultipleChoiceQuestion.objects.get(question=question)
             selected_options = RMMCQOption.objects.filter(id__in=answer_data)
-            answer = RMMCQAnswer.objects.create(
-                user=self.context['request'].user,
+            rmmcq_answer = RMMCQAnswer.objects.create(
+                answer=answer,
                 question=rmmcq_question,
-                created_at = timezone.now()
             )
-            answer.selected_options.set(selected_options)
-            answer.calculate_score()
-            return answer
+            rmmcq_answer.selected_options.set(selected_options)
+            rmmcq_answer.calculate_score()
+            return rmmcq_answer
+
+

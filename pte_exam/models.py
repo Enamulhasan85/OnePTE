@@ -67,12 +67,20 @@ class RMMCQOption(models.Model):
         return f"Option: {self.content[:50]} (Correct: {self.is_correct})"
 
 
+class Answer(models.Model):    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="answers")
+    question = models.ForeignKey("Question", on_delete=models.CASCADE, related_name="answers")
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Answer by {self.user} for Question {self.question.title}"
+
 
 class SSTAnswer(models.Model):
     """
     Model for storing answers to Summarize Spoken Text (SST) questions.
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sst_answers")
+    answer = models.OneToOneField("Answer", on_delete=models.CASCADE, related_name="sst_answer_details")
     question = models.ForeignKey("SummarizeSpokenText", on_delete=models.CASCADE, related_name="answers")
     text = models.TextField(help_text="Student's text-based summary.")
     content_score = models.IntegerField(default=0, help_text="Score for content (max 2).")
@@ -81,7 +89,6 @@ class SSTAnswer(models.Model):
     vocabulary_score = models.IntegerField(default=0, help_text="Score for vocabulary (max 2).")
     spelling_score = models.IntegerField(default=0, help_text="Score for spelling (max 2).")
     total_score = models.IntegerField(default=0, help_text="Total score out of 10.")
-    created_at = models.DateTimeField(default=timezone.now)
 
     def calculate_score(self):
         """
@@ -110,18 +117,16 @@ class SSTAnswer(models.Model):
         }
 
     def __str__(self):
-        return f"Answer by {self.user} for SST {self.question.question.title}"
-
+        return f"Answer by {self.answer.user} for SST {self.question.question.title}"
 
 class ROAnswer(models.Model):
     """
     Model for storing answers to Re-Order Paragraph (RO) questions.
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ro_answers")
+    answer = models.OneToOneField("Answer", on_delete=models.CASCADE, related_name="ro_answer_details")
     question = models.ForeignKey("ReorderParagraphQuestion", on_delete=models.CASCADE, related_name="answers")
     paragraph_order = models.JSONField(help_text="Submitted order of paragraphs.")
     total_score = models.IntegerField(default=0, help_text="Total score based on correct adjacent pairs.")
-    created_at = models.DateTimeField(default=timezone.now)
 
     def calculate_score(self):
         """
@@ -147,18 +152,17 @@ class ROAnswer(models.Model):
         }
 
     def __str__(self):
-        return f"Answer by {self.user} for RO {self.question.question.title}"
+        return f"Answer by {self.answer.user} for RO {self.question.question.title}"
 
 
 class RMMCQAnswer(models.Model):
     """
     Model for storing answers to Reading Multiple Choice (RMMCQ) questions.
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rmmcq_answers")
+    answer = models.OneToOneField("Answer", on_delete=models.CASCADE, related_name="rmmcq_answer_details")
     question = models.ForeignKey("ReadingMultipleChoiceQuestion", on_delete=models.CASCADE, related_name="answers")
     selected_options = models.ManyToManyField("RMMCQOption", related_name="answers", help_text="Selected options by the user.")
     total_score = models.IntegerField(default=0, help_text="Total score for the question.")
-    created_at = models.DateTimeField(default=timezone.now)
 
     def calculate_score(self):
         """
@@ -184,4 +188,4 @@ class RMMCQAnswer(models.Model):
         }
 
     def __str__(self):
-        return f"Answer by {self.user} for RMMCQ {self.question.question.title}"
+        return f"Answer by {self.answer.user} for RMMCQ {self.question.question.title}"
