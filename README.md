@@ -1,6 +1,6 @@
 # OnePTE - PTE Exam Management API
 
-OnePTE is a backend API service designed to manage questions and answers for a PTE (Pearson Test of English) exam. It allows the retrieval and management of different types of questions for the exam, including **Summarize Spoken Text (SST)**, **Re-Order Paragraphs (RO)**, and **Reading Multiple Choice Questions (RMMCQ)**. Students can submit their answers for practice and view their practice history to track their performance. The API follows RESTful principles and serves data in JSON format.
+OnePTE is a backend system for managing PTE (Pearson Test of English) exams. It provides RESTful APIs for managing questions of different types including **Summarize Spoken Text (SST)**, **Re-Order Paragraphs (RO)**, and **Reading Multiple Choice Questions (RMMCQ)**, submitting answers, and tracking user practice history. The backend is built using Django REST Framework and integrates with a relational database for data storage.
 
 ## Table of Contents
 
