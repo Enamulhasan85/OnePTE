@@ -4,12 +4,19 @@ OnePTE is a backend API service designed to manage questions and answers for a P
 
 ## Table of Contents
 
-- [Introduction](#onepte)
+- [Introduction](#onepte---pte-exam-management-api)
 - [Installation](#installation)
 - [API Endpoints](#api-endpoints)
-  - [GET /api/questions/](#get-apiquestions)
-  - [POST /api/submit-answer/](#post-apisubmit-answer)
-  - [GET /api/practice-history/](#get-apipractice-history)
+  - [Authentication](#authentication)
+    - [POST /api/token/](#1-get-user-access-token)
+    - [POST /api/token/refresh/](#2-refresh-user-access-token)
+  - [Questions](#questions)
+    - [GET /api/questions/](#3-get-questions-list)
+    - [GET /api/questions/{id}](#4-get-question-details)
+  - [Answers](#answers)
+    - [POST /api/submit-answer/](#5-submit-answer)
+  - [Practice History](#practice-history)
+    - [GET /api/practice-history/](#1-get-practice-history)
 - [Models](#models)
   - [Question](#question)
   - [SummarizeSpokenText](#summarizespokentext)
