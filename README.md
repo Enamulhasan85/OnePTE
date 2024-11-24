@@ -79,20 +79,16 @@ To get started with this project, follow these steps:
 
 The application should now be accessible at http://127.0.0.1:8000.
 
+
 ## API Postman Collection
 
 For easier interaction with the API, you can import the following Postman collection:
 
-- [OnePTE API Postman Collection](https://api.postman.com/collections/12463439-429d3dce-b10e-4ce4-bf5f-a3d9c4912fbc?access_key=PMAT-01JDENNMJF26PF96T91WJT5NQ4)
+[OnePTE API Postman Collection](https://api.postman.com/collections/12463439-429d3dce-b10e-4ce4-bf5f-a3d9c4912fbc?access_key=PMAT-01JDENNMJF26PF96T91WJT5NQ4)
 
 You can use this collection to test various API endpoints with example requests and responses.
 
 ## API Endpoints
-
-Here's an example of how you can add the API information to your `README.md` file:
-
-```markdown
-# OnePTE API Documentation
 
 This repository contains the API documentation and usage for the **OnePTE** platform. Below are the key API endpoints used for various operations.
 
