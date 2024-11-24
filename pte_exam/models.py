@@ -119,6 +119,7 @@ class SSTAnswer(models.Model):
     def __str__(self):
         return f"Answer by {self.answer.user} for SST {self.question.question.title}"
 
+
 class ROAnswer(models.Model):
     """
     Model for storing answers to Re-Order Paragraph (RO) questions.
