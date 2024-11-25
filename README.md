@@ -71,6 +71,8 @@ To get started with this project, follow these steps:
 
 The application should now be accessible at http://127.0.0.1:8000.
 
+## Front-end part isn't complete. Only question list page is workable.
+Link: 1. http://localhost:3000/questions/
 
 ### Frontend Setup and Usage
 
