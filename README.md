@@ -6,6 +6,7 @@ OnePTE is a backend system for managing PTE (Pearson Test of English) exams. It 
 
 - [Introduction](#onepte---pte-exam-management-api)
 - [Installation](#installation)
+- [Admin Module](#admin-module)
 - [API Endpoints](#api-endpoints)
   - [Authentication](#authentication)
     - [POST /api/token/](#1-get-user-access-token)
@@ -70,6 +71,82 @@ To get started with this project, follow these steps:
 
 The application should now be accessible at http://127.0.0.1:8000.
 
+
+### Frontend Setup and Usage
+
+This section provides instructions for setting up and running the React frontend of the OnePTE project.
+
+1. Ensure that you have **Node.js** and **npm** installed:
+  ```bash
+  node -v
+  npm -v
+  ```
+2. **Navigate to the frontend directory:**
+  Go to the frontend directory (assuming your frontend is inside the `frontend` folder):
+  ```bash
+  cd onepte-frontend
+  ```
+3. **Install dependencies:**
+  In the frontend directory, run the following command to install all the required dependencies:
+  ```bash
+    npm install
+  ```
+  This will install all the dependencies listed in the `package.json` file.
+
+### Running the Development Server
+
+To start the React development server, run the following command:
+
+  ```bash
+  npm start
+  ```
+
+This will:
+
+- Start the development server.
+- Open the application in your default browser (usually at `http://localhost:3000`).
+
+### Running Frontend and Backend Together
+
+To run both the frontend and backend simultaneously:
+
+- Open two terminal windows:
+  - One for running the **backend** using `python manage.py runserver`.
+  - One for running the **frontend** using `npm start`.
+
+This will allow you to test the full application with both the frontend and backend running.
+
+## Admin Module
+
+The **Admin Module** in the project allows administrators to manage questions, answers, and practice history directly through the Django admin interface. Follow these steps to configure and access the admin panel:
+
+#### 1. **Creating a Superuser**
+To access the admin panel, you need to create a superuser account. Run the following command in your terminal:
+
+```bash
+python manage.py createsuperuser
+```
+
+Provide the required details (username, email, password) when prompted.
+
+#### 2. **Accessing the Admin Panel**
+Start the development server and navigate to the admin panel using the following URL:
+
+```plaintext
+http://127.0.0.1:8000/admin/
+```
+
+Log in using the superuser credentials you created.
+
+#### 3. **Managing Data in the Admin Panel**
+The following models are available for management in the admin panel:
+- **Questions**: Add, edit, or delete questions.
+- **Answers**: View and manage submitted answers.
+- **Practice History**: Track and review user practice data.
+- **Users**: Manage registered users.
+
+#### 4. **Admin Permissions**
+Ensure that only authorized personnel have access to the admin panel. Assign appropriate permissions to admin users based on their roles.
 
 ## API Postman Collection
 
@@ -206,49 +283,75 @@ This repository contains the API documentation and usage for the **OnePTE** plat
   - `Authorization`: `Bearer <access_token>`
 
 - **Request Body**:
-  ```json
+  ```json 
   {
     "question_id": "1",
     "answer": "the summary of the audio is..."
   }
+  //(SST)
+  ``` 
+  ```json 
+  {
+    "question_id": "2",
+    "answer": [2, 3, 1]
+  }
+  //(RO)
+  ```
+  ```json
+  {
+    "question_id": "3",
+    "answer": [2, 3, 1]
+  }
+  //(RMMCQ)
   ```
 - **Response**:
+  ```json 
+  {
+      "message": "Answer submitted successfully. Your score will be available soon.",
+      "data": {
+          "id": 34,
+          "question_id": 1,
+          "question_type": "SST",
+          "question_type_display": "Summarize Spoken Text"
+      }
+  }
+  //(SST)
+  ``` 
+  ```json 
+  {
+    "message": "Answer submitted successfully.",
+    "data": {
+      "id": 35,
+      "question_id": 2,
+      "question_type": "RO",
+      "question_type_display": "Re-Order Paragraph",
+      "score_components": {
+          "Blank": {
+              "score": 1,
+              "max_score": 2
+          }
+      }
+    }
+  }
+  //(RO)
+  ```
   ```json
-    {
-        "message": "Answer submitted successfully.",
-        "data": {
-            "id": 23,
-            "question_id": 1,
-            "question_type": "SST",
-            "question_type_display": "Summarize Spoken Text",
-            "score_components": {
-                "Content": {
-                    "score": 1,
-                    "max_score": 2
-                },
-                "Form": {
-                    "score": 1,
-                    "max_score": 2
-                },
-                "Grammar": {
-                    "score": 1,
-                    "max_score": 2
-                },
-                "Vocabulary": {
-                    "score": 2,
-                    "max_score": 2
-                },
-                "Spelling": {
-                    "score": 1,
-                    "max_score": 2
-                },
-                "Total": {
-                    "score": 6,
-                    "max_score": 10
-                }
+  {
+    "message": "Answer submitted successfully.",
+    "data": {
+        "id": 36,
+        "question_id": 3,
+        "question_type": "RMMCQ",
+        "question_type_display": "Reading Multiple Choice (Multiple)",
+        "score_components": {
+            "Choice": {
+                "score": 1,
+                "max_score": 2
             }
         }
     }
+  }
+  //(RMMCQ)
   ```
 
 ## Practice History

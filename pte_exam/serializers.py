@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from .models import *
 from .models import SSTAnswer, ROAnswer, RMMCQAnswer
-# from .tasks import calculate_sst_score
+from .tasks import CalculateScoreThread
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -166,10 +166,11 @@ class SubmitAnswerSerializer(serializers.Serializer):
                 text=answer_data,
             )
 
-            # Enqueue the scoring task
-            # calculate_sst_score.delay(sst_answer.id)
+            # # Run calculate_score in a background thread
+            thread = CalculateScoreThread(sst_answer.id)
+            thread.start()
 
-            sst_answer.calculate_score()
+            # sst_answer.calculate_score()
             return sst_answer
         
         elif question_type == 'RO':

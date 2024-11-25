@@ -116,7 +116,8 @@ The system uses SQLite for data storage. The database schema is designed to supp
 ### 6. **Scoring Mechanism**
 
 Each question type has its own scoring logic:
-- **SST**: Scores are calculated based on five components (content, form, grammar, vocabulary, spelling), each having a maximum score of 2. The total score is the sum of these components (out of 10).
+- **SST**: Scores are calculated based on five components (content, form, grammar, vocabulary, spelling), each having a maximum score of 2. The total score is the sum of these components (out of 10).  
+  **Background Scoring**: To optimize performance, scoring for SST questions is handled asynchronously using threading. This allows the system to perform scoring tasks in the background without blocking the main process, improving user experience and system responsiveness.
 - **RO**: The score is based on the number of correct adjacent pairs in the reordered paragraphs.
 - **RMMCQ**: Each correct option adds 1 point to the score, while incorrect options subtract 1 point, ensuring the score is non-negative.
 

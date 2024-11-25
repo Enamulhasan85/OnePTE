@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     # 'django_celery_results',
-    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -159,7 +158,7 @@ MEDIA_URL = '/media/'
 # Absolute filesystem path to the directory where media files are stored
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# ## Celery Setup for task queue system
+# Background task queue system
 # # Broker URL (Redis in this example)
 # CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
@@ -176,6 +175,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
  
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # React development server
+    'http://127.0.0.1:3000/',
 ]
 
 

@@ -48,15 +48,22 @@ class SubmitAnswerView(APIView):
         if serializer.is_valid():
             # If the data is valid, save the answer and return the response
             answer = serializer.save()
+            message = ""
+            data = {
+                "id": answer.answer.id,
+                "question_id": answer.question.question.id,
+                "question_type": answer.question.question.question_type,
+                "question_type_display": answer.question.question.get_question_type_display(),
+            }
+            if answer.question.question.question_type != "SST":
+                data["score_components"] = answer.get_score_components()
+                message =  "Answer submitted successfully."
+            else:
+                message =  "Answer submitted successfully. Your score will be available soon."
+
             return Response({
-                "message": "Answer submitted successfully.",
-                "data": {
-                    "id": answer.answer.id,
-                    "question_id": answer.question.question.id,
-                    "question_type": answer.question.question.question_type,
-                    "question_type_display": answer.question.question.get_question_type_display(),
-                    "score_components": answer.get_score_components()
-                }
+                "message": message,
+                "data": data
             }, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

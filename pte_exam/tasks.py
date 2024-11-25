@@ -42,3 +42,21 @@
     
 #     except SSTAnswer.DoesNotExist:
 #         return f"SSTAnswer ID {answer_id} does not exist"
+
+
+import threading
+import time
+
+class CalculateScoreThread(threading.Thread):
+    def __init__(self, sst_answer_id):
+        self.sst_answer_id = sst_answer_id
+        super().__init__()
+
+    def run(self):
+        from .models import SSTAnswer  # Import inside the thread to avoid circular imports
+        # time.sleep(5)  # Delay for 5 seconds
+        # print("the sleep is over")
+        sst_answer = SSTAnswer.objects.get(id=self.sst_answer_id)
+        sst_answer.calculate_score()
+
+
