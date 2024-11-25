@@ -17,15 +17,6 @@ OnePTE is a backend system for managing PTE (Pearson Test of English) exams. It 
     - [POST /api/submit-answer/](#5-submit-answer)
   - [Practice History](#practice-history)
     - [GET /api/practice-history/](#1-get-practice-history)
-- [Models](#models)
-  - [Question](#question)
-  - [SummarizeSpokenText](#summarizespokentext)
-  - [ReorderParagraphQuestion](#reorderparagraphquestion)
-  - [ReadingMultipleChoiceQuestion](#readingmultiplechoicequestion)
-  - [RMMCQOption](#rmmcqoption)
-- [Admin Panel](#admin-panel)
-- [Running the Project](#running-the-project)
-- [License](#license)
 
 ## Installation
 

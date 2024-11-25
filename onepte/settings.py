@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_celery_results',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Add this line
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -157,7 +159,7 @@ MEDIA_URL = '/media/'
 # Absolute filesystem path to the directory where media files are stored
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
+## Celery Setup for task queue system
 # Broker URL (Redis in this example)
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
@@ -170,3 +172,11 @@ CELERY_TASK_SERIALIZER = 'json'
 
 # Enable UTC for Celery
 CELERY_ENABLE_UTC = True
+
+ 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # React development server
+]
+
+
+# React Front-end 
