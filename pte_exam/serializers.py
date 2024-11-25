@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from .models import *
 from .models import SSTAnswer, ROAnswer, RMMCQAnswer
-from .tasks import calculate_sst_score
+# from .tasks import calculate_sst_score
 
 
 class QuestionSerializer(serializers.ModelSerializer):

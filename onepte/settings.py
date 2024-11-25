@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'pte_exam',
     'rest_framework',
     'rest_framework_simplejwt',
-    'django_celery_results',
+    # 'django_celery_results',
     'corsheaders',
 ]
 
@@ -159,19 +159,19 @@ MEDIA_URL = '/media/'
 # Absolute filesystem path to the directory where media files are stored
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-## Celery Setup for task queue system
-# Broker URL (Redis in this example)
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# ## Celery Setup for task queue system
+# # Broker URL (Redis in this example)
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
-# Backend for storing task results
-CELERY_RESULT_BACKEND = 'django-db'
+# # Backend for storing task results
+# CELERY_RESULT_BACKEND = 'django-db'
 
-# Task serializer
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
+# # Task serializer
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
 
-# Enable UTC for Celery
-CELERY_ENABLE_UTC = True
+# # Enable UTC for Celery
+# CELERY_ENABLE_UTC = True
 
  
 CORS_ALLOWED_ORIGINS = [
